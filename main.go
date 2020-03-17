@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 
 	git "gopkg.in/src-d/go-git.v4"
-	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
@@ -24,17 +22,7 @@ func main() {
 	commit, _ := repo.CommitObject(ref.Hash())
 	fileStats := object.FileStats{}
 
-	// First check if we are on master branch or not
-	if ref.Name() == plumbing.Master || os.Getenv("$CI_COMMIT_REF_NAME") == "master" {
-		fileStats, _ = commit.Stats()
-	} else {
-		masterRef, _ := repo.Reference(plumbing.Master, true)
-		masterCommit, _ := repo.CommitObject(masterRef.Hash())
-		patch, _ := masterCommit.Patch(commit)
-
-		fileStats = patch.Stats()
-
-	}
+	fileStats, _ = commit.Stats()
 
 	filePaths := []string{}
 

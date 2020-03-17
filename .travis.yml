@@ -10,10 +10,13 @@ services:
 
 script:
   - docker build -t ansible-pipeline .
-  
+
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   - docker tag ansible-pipeline corberos/ansible-pipeline:latest
   - docker tag ansible-pipeline corberos/ansible-pipeline:$TRAVIS_BUILD_NUMBER
   - docker push corberos/ansible-pipeline:latest
   - docker push corberos/ansible-pipeline:$TRAVIS_BUILD_NUMBER
+
+env:
+  - VERSION=$(cat VERSION)
