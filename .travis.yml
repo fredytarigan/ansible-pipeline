@@ -14,9 +14,9 @@ script:
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   - docker tag ansible-pipeline corberos/ansible-pipeline:latest
-  - docker tag ansible-pipeline corberos/ansible-pipeline:$TRAVIS_BUILD_NUMBER
+  - docker tag ansible-pipeline corberos/ansible-pipeline:$DOCKERE_BUILD_VERSION
   - docker push corberos/ansible-pipeline:latest
-  - docker push corberos/ansible-pipeline:$TRAVIS_BUILD_NUMBER
+  - docker push corberos/ansible-pipeline:$DOCKER_BUILD_VERSION
 
 env:
-  - VERSION=$(cat VERSION)
+  - DOCKER_BUILD_VERSION=$(cat VERSION)
