@@ -2,23 +2,19 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 
 	git "gopkg.in/src-d/go-git.v4"
+	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 // DirStructure is used to parse changes commit
-const DirStructure = `(?P<fullpath>(?P<dirpath>(?P<rolesname>roles\/.*\/).*\/)(?P<filename>.*))`
-
-type project struct {
-	rolesName string
-}
+const DirStructure = `(?P<fullpath>(?P<dirpath>roles/(?P<rolesname>.*)\/.*\/)(?P<filename>.*))`
 
 func main() {
-	var DirStructure string
-
 	var matcher *regexp.Regexp
 	//var finalDir string
 	matcher = regexp.MustCompile(DirStructure)
@@ -28,7 +24,17 @@ func main() {
 	commit, _ := repo.CommitObject(ref.Hash())
 	fileStats := object.FileStats{}
 
-	fileStats, _ = commit.Stats()
+	// First check if we are on master branch or not
+	if ref.Name() == plumbing.Master || os.Getenv("$CI_COMMIT_REF_NAME") == "master" {
+		fileStats, _ = commit.Stats()
+	} else {
+		masterRef, _ := repo.Reference(plumbing.Master, true)
+		masterCommit, _ := repo.CommitObject(masterRef.Hash())
+		patch, _ := masterCommit.Patch(commit)
+
+		fileStats = patch.Stats()
+
+	}
 
 	filePaths := []string{}
 
@@ -57,7 +63,7 @@ func main() {
 			}
 		}
 
-		pr = append(pr, f["fullpath"])
+		pr = append(pr, "roles/"+f["rolesname"])
 	}
 	dir := removeDupes(pr)
 	fmt.Println(dir)
