@@ -26,4 +26,6 @@ RUN apk add --update --no-cache; \
     pip3 install python-consul; \
     pip3 install yamllint; \
     pip3 install pylint; \
-    apk del .build-deps; \
+    pip3 install molecule[lint]; \
+    pip3 install docker; \
+    apk del .build-deps;

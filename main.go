@@ -66,7 +66,7 @@ func removeDupes(folder []string) []string {
 
 	result := []string{}
 	for key, _ := range e {
-		result = append(result, "\""+key+"\"")
+		result = append(result, key)
 	}
 
 	return result
