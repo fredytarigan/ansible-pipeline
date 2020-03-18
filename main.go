@@ -10,7 +10,7 @@ import (
 )
 
 // DirStructure is used to parse changes commit
-const DirStructure = `(?P<fullpath>(?P<dirpath>roles/(?P<rolesname>.*)\/.*\/)(?P<filename>.*))`
+const DirStructure = `(?P<fullpath>(?P<dirpath>roles/(?P<rolesname>[\w|\W].*?)\/.*\/)(?P<filename>.*))`
 
 func main() {
 	var matcher *regexp.Regexp
