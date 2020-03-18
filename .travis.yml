@@ -8,13 +8,16 @@ sudo: required
 services:
   - docker
 
+before_script:
+  - build/set_env.sh
+
 script:
   - docker build -t ansible-pipeline .
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   - docker tag ansible-pipeline corberos/ansible-pipeline:latest
-  - docker tag ansible-pipeline corberos/ansible-pipeline:$DOCKERE_BUILD_VERSION
+  - docker tag ansible-pipeline corberos/ansible-pipeline:$DOCKER_BUILD_VERSION
   - docker push corberos/ansible-pipeline:latest
   - docker push corberos/ansible-pipeline:$DOCKER_BUILD_VERSION
 
