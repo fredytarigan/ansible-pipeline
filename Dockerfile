@@ -28,4 +28,6 @@ RUN apk add --update --no-cache; \
     pip3 install pylint; \
     pip3 install molecule[lint]; \
     pip3 install docker; \
-    apk del .build-deps;
+    apk del .build-deps; \
+    # symlinking python3 to python \
+    ln -sf /usr/bin/python3 /usr/bin/python
